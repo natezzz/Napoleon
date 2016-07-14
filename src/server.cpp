@@ -3,6 +3,7 @@
 #include "defines.hpp"
 #include "socket.hpp"
 #include "server.hpp"
+#include "logger.hpp"
 
 namespace napoleon {
 
@@ -25,13 +26,13 @@ void Server::serveRequest(Request req)
 {
     switch (req.getType()) {
         case Request::RequestType::GET:
-            std::cout << "Method: GET" << std::endl;
+            Logger::logInfo("Method: GET");
             break;
         case Request::RequestType::POST:
-            std::cout << "Method: POST" << std::endl;
+            Logger::logInfo("Method: POST");
             break;
         default:
-            std::cout << "Method: Unknown" << std::endl;
+            Logger::logError("Method: Unknown");
             break;
     }
 }

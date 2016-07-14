@@ -14,7 +14,7 @@ public:
     }
 
     static inline void logError(std::string error) {
-        std::cerr << "[ERROR]: " << error << std:endl;
+        std::cerr << "[ERROR]: " << error << std::endl;
     }
 };
 

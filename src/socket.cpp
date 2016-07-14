@@ -1,11 +1,13 @@
 #include <unistd.h>
 #include <cstring>
 #include <iostream>
+#include <sstream>
 #include <arpa/inet.h>
 
 #include "socket.hpp"
 #include "error.hpp"
 #include "defines.hpp"
+#include "logger.hpp"
 
 namespace napoleon {
 
@@ -31,6 +33,10 @@ void Socket::init()
     if (::listen(sockfd, BACK_LOG) == -1) {
         die("listen");
     }
+
+    std::stringstream ss;
+    ss << "listening on port " << port;
+    Logger::logInfo(ss.str());
 }
 
 
