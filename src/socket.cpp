@@ -20,7 +20,7 @@ void Socket::init()
 
     struct sockaddr_in myAddr;
     myAddr.sin_family = AF_INET;
-    myAddr.sin_port   = ::htons(port);
+    myAddr.sin_port   = htons(port);
     myAddr.sin_addr.s_addr = INADDR_ANY;
     ::memset(&(myAddr.sin_zero), '\0', 0);
 
