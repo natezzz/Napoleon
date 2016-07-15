@@ -20,6 +20,13 @@ void Socket::init()
         die("sockfd");
     }
 
+    // make socket reusable
+    const int ON = 1;
+    if (::setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &ON, sizeof(ON)) == -1) {
+        close(sockfd);
+        die("setsocketopt");
+    }
+
     struct sockaddr_in myAddr;
     myAddr.sin_family = AF_INET;
     myAddr.sin_port   = htons(port);
