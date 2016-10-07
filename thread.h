@@ -17,5 +17,6 @@ typedef enum
 
 threadpool_t *threadpool_create(int thread_count, int queue_size);
 int threadpool_add_task(threadpool_t *pool, void (*func)(void*), void *arg);
+void threadpool_join(threadpool_t *pool);
 
 #endif

@@ -109,6 +109,15 @@ threadpool_add_task(threadpool_t *pool, void (*func)(void*), void *arg)
 	return err;
 }
 
+void
+threadpool_join(threadpool_t *pool)
+{
+	int i;
+	for (i = 0; i < pool->thread_count; i++) {
+		pthread_join(pool->threads[i], NULL);
+	}
+}
+
 
 static void *
 thread_start(void *threadpool)
@@ -125,7 +134,7 @@ thread_start(void *threadpool)
 
 		task.func = pool->queue[pool->q_head].func;
 		task.arg  = pool->queue[pool->q_head].arg;
-		pool->q_head = (pool->q_head + 1) & pool->q_size;
+		pool->q_head = (pool->q_head + 1) % pool->q_size;
 		pool->q_count -= 1;
 
 		pthread_mutex_unlock(&(pool->lock));

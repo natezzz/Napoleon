@@ -16,7 +16,7 @@
 static int sock_fd;
 static struct sockaddr_in addr;
 
-static ev_io sock_watcher;
+static napo_io sock_w;
 static threadpool_t *pool;
 
 void
@@ -52,10 +52,15 @@ main(int argc, char const *argv[])
 {
     init_listen_sock();
     pool = threadpool_create(THREAD_NUM, QUEUE_NUM);
-    init_event_loop(&sock_watcher, accept_cb, sock_fd);
+    sock_w.threadpool = pool;
+    // init_event_loop(&sock_w.watcher, accept_cb, sock_fd);
 
-    close(sock_fd);
-    printf("Interrupted: closed\n");
+    struct ev_loop *loop = EV_DEFAULT;
+    ev_io_init(&sock_w.watcher, accept_cb, sock_fd, EV_READ);
+    ev_io_start(loop, &sock_w.watcher);
+    ev_run(loop, 0);
+    printf("join\n");
+    threadpool_join(pool);
 
     return 0;
 }
