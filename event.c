@@ -11,6 +11,7 @@
 #include "event.h"
 #include "thread.h"
 #include "error.h"
+#include "http.h"
 
 void process_client(void *arg);
 
@@ -77,16 +78,9 @@ process_client(void *arg)
     getpeername(client_fd, (struct sockaddr *)&addr, &addrlen);
     printf("Connected: %s\n", inet_ntoa(addr.sin_addr));
 
-    /* test */
-    #define BUFSIZE 4096
-    char *buf = (char *)malloc(sizeof(char) * BUFSIZE);
-    if (buf == NULL) {
-        die("malloc");
+    if (handle_http_request(client_fd) < 0) {
+        perror("failed handling http request.");
     }
 
-    ssize_t num_read;
-    while ((num_read = recv(client_fd, buf, BUFSIZE, 0)) > 0) {
-        printf("here\n");
-        printf("Got: %s\n", buf);
-    }
+    close(client_fd);
 }
