@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 
 #include "http.h"
+#include "response.h"
 #include "picohttpparser.h"
 
 #define BUFSIZE 4096
@@ -24,6 +25,7 @@ handle_http_request(int cfd)
   size_t buflen = 0, prevbuflen = 0, method_len, path_len, num_headers;
   int pico_ret, minor_version;
 
+  /* receive a request and parse it */
   while (1) {
     recved = recv(cfd, buf + buflen, sizeof(buf) - buflen, 0);
     if (recved < 0) {
@@ -44,6 +46,10 @@ handle_http_request(int cfd)
     else if (pico_ret == -1)
       return parse_http_failure;
     /* else just loop */
+  }
+
+  if (respond_to(cfd, method, method_len, path, path_len) < 0) {
+    return io_failure;
   }
 
 	return err;
